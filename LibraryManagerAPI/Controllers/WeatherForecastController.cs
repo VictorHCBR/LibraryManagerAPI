@@ -1,33 +1,25 @@
+using Contracts;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LibraryManagerAPI.Controllers
+namespace LibraryManagerAPI.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class WeatherForecastController : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    private readonly ILoggerManager _logger;
+    public WeatherForecastController(ILoggerManager logger)
     {
-        private static readonly string[] Summaries = new[]
-        {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
-
-        private readonly ILogger<WeatherForecastController> _logger;
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
-        {
-            _logger = logger;
-        }
-
-        [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
-        {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
-        }
+        _logger = logger;
     }
-}
+    [HttpGet]
+    public IEnumerable<string> Get()
+    {
+        _logger.LogInfo("Info message from controller.");
+        _logger.LogWarn("Warn message from controller.");
+        _logger.LogDebug("Debug message from controller.");
+        _logger.LogError("Error message from controller.");
+
+        return new string[] { "value1", "value2" };
+    }
+};
